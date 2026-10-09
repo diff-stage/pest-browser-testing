@@ -1,0 +1,10 @@
+--- a/app/Http/Controllers/OrderController.php	2026-10-09 04:34:55.138989106 +0700
++++ b/app/Http/Controllers/OrderController.php	2026-10-09 04:34:55.149615090 +0700
+@@ -24,7 +24,6 @@
+         $reference = $payments->charge($basket->totalPence(), $user->email);
+ 
+         $order = DB::transaction(function () use ($user, $basket, $reference): Order {
+-            $user->basketItems()->delete();
+ 
+             return $user->orders()->create([
+                 'subtotal_pence' => $basket->subtotalPence(),

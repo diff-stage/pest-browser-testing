@@ -1,0 +1,14 @@
+{
+  "name": "diff-stage",
+  "owner": {
+    "name": "Diff Stage"
+  },
+  "description": "Agent skills from Diff Stage.",
+  "plugins": [
+    {
+      "name": "pest-browser-testing",
+      "source": "./",
+      "description": "Write reliable Pest browser tests and fix flaky ones."
+    }
+  ]
+}

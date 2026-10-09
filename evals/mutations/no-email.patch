@@ -1,0 +1,10 @@
+--- a/app/Http/Controllers/OrderController.php	2026-10-09 04:34:55.156554065 +0700
++++ b/app/Http/Controllers/OrderController.php	2026-10-09 04:34:55.168443015 +0700
+@@ -37,7 +37,6 @@
+ 
+         session()->forget('coupon');
+ 
+-        Mail::to($user)->send(new OrderPlaced($order));
+ 
+         return to_route('orders.show', $order)->with('status', 'Order placed');
+     }

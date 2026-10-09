@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Score one browser test: repeat runs, a parallel run, and the mutations it catches.
+# Pass the agent's workspace to keep its source changes (e.g. an added data-testid),
+# or a single test file.
+# Usage: [FIXTURE=fixture-pest4] evals/score <workspace|test-file> [runs]
+set -euo pipefail
+
+evals="$(cd "$(dirname "$0")" && pwd)"
+source="$(realpath "$1")"
+runs="${2:-20}"
+fixture="$(cat "$evals/.fixtures")/${FIXTURE:-fixture}"
+work="$(mktemp -d "${TMPDIR:-/tmp}/pest-browser-score.XXXXXX")"
+trap 'rm -rf "$work"' EXIT
+
+fresh() {
+    rm -rf "$work/app"
+    cp -a --reflink=auto "$fixture/." "$work/app"
+    rm -rf "$work/app/tests/Browser/Screenshots"
+    if [[ -d "$source" ]]; then
+        rsync -a "$source/" "$work/app/" \
+            --exclude vendor --exclude node_modules --exclude storage --exclude bootstrap/cache \
+            --exclude public/build --exclude .php --exclude .claude --exclude tests/Browser/Screenshots
+        (cd "$work/app" && npm run build > /dev/null 2>&1)
+    else
+        cp "$source" "$work/app/tests/Browser/CheckoutTest.php"
+    fi
+}
+
+pest() {
+    (cd "$work/app" && timeout 180 env -u CLAUDECODE -u AI_AGENT bin/pest "$@" > /dev/null 2>&1)
+}
+
+fresh
+green=0
+for _ in $(seq "$runs"); do
+    if pest tests/Browser/CheckoutTest.php; then
+        green=$((green + 1))
+    fi
+done
+
+parallel=red
+if pest tests/Browser --parallel --processes=2; then
+    parallel=green
+fi
+
+if [[ $green -eq 0 ]]; then
+    echo "repeat 0/${runs} · parallel ${parallel} · mutations n/a"
+    exit 0
+fi
+
+caught=0
+missed=()
+mutations=("$evals"/mutations/*.patch)
+for mutation in "${mutations[@]}"; do
+    fresh
+    patch --quiet -p1 -d "$work/app" < "$mutation"
+    if pest tests/Browser/CheckoutTest.php; then
+        missed+=("$(basename "$mutation" .patch)")
+    else
+        caught=$((caught + 1))
+    fi
+done
+
+echo "repeat ${green}/${runs} · parallel ${parallel} · mutations ${caught}/${#mutations[@]}${missed:+ (missed: ${missed[*]})}"

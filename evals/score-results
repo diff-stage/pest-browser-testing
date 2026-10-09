@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Score every test the agent wrote in an eval run kept with --keep-temp.
+# Usage: evals/score-results <results/…/aggregate-result.json> [runs]
+set -euo pipefail
+
+evals="$(cd "$(dirname "$0")" && pwd)"
+runs="${2:-20}"
+
+php -r '
+    $result = json_decode(file_get_contents($argv[1]), true);
+    foreach ($result["cases"] as $case) {
+        foreach ($case["arms"] as $arm => $armRuns) {
+            foreach ($armRuns as $index => $run) {
+                echo implode("\t", [$case["name"], $arm, $index + 1, $run["tracePath"] ?? ""]), "\n";
+            }
+        }
+    }
+' "$1" | while IFS=$'\t' read -r case arm run trace; do
+    kept="$(dirname "$(dirname "$trace")")"
+    chmod 700 "$kept" "$kept/sealed" 2>/dev/null || true
+    workspace="$kept/sealed/home/cwd"
+    printf '%s  %-7s run %s  ' "$case" "$arm" "$run"
+    if [[ -f "$workspace/tests/Browser/CheckoutTest.php" ]]; then
+        fixture=fixture
+        [[ "$case" == *-pest4 ]] && fixture=fixture-pest4
+        FIXTURE="$fixture" "$evals/score" "$workspace" "$runs"
+    else
+        echo "no test written"
+    fi
+done

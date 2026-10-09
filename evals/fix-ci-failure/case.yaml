@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: fix-ci-failure
+description: Fix a GitHub Actions workflow whose browser tests fail in CI; the log shows only the first of several missing pieces.
+context:
+  scaffold_script: scaffold.sh

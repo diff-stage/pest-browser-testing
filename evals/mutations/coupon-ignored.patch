@@ -1,0 +1,21 @@
+--- a/app/Http/Controllers/OrderController.php	2026-10-09 04:34:55.122655034 +0700
++++ b/app/Http/Controllers/OrderController.php	2026-10-09 04:34:55.132571334 +0700
+@@ -21,15 +21,15 @@
+ 
+         abort_if($basket->items()->isEmpty(), 422, 'Your basket is empty.');
+ 
+-        $reference = $payments->charge($basket->totalPence(), $user->email);
++        $reference = $payments->charge($basket->subtotalPence(), $user->email);
+ 
+         $order = DB::transaction(function () use ($user, $basket, $reference): Order {
+             $user->basketItems()->delete();
+ 
+             return $user->orders()->create([
+                 'subtotal_pence' => $basket->subtotalPence(),
+-                'discount_pence' => $basket->discountPence(),
+-                'total_pence' => $basket->totalPence(),
++                'discount_pence' => 0,
++                'total_pence' => $basket->subtotalPence(),
+                 'coupon_code' => $basket->couponCode(),
+                 'payment_reference' => $reference,
+             ]);

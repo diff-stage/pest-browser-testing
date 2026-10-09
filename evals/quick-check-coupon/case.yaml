@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: quick-check-coupon
+description: A one-off "does it work?" check where the user says not to add a test; nothing permanent should be left behind.
+context:
+  scaffold_script: scaffold.sh

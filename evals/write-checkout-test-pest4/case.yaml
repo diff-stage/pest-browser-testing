@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: write-checkout-test-pest4
+description: The checkout test task on Pest 4.7.8, plugin 4.3.1 and Playwright 1.61.1, where the coupon form posts FormData that the 4.x test server drops.
+context:
+  scaffold_script: scaffold.sh

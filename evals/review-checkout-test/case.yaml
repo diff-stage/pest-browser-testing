@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: review-checkout-test
+description: Review a passing checkout browser test with fixed sleeps, a no-op wait, brittle selectors and assertions that miss the coupon and side effects.
+context:
+  scaffold_script: scaffold.sh

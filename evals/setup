@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Build the fixture apps outside the repo: plugin eval refuses plugin
+# directories with more than 20,000 entries, and vendor/ alone is ~12,000.
+# Usage: evals/setup
+set -euo pipefail
+
+repo="$(cd "$(dirname "$0")/.." && pwd)"
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/pest-browser-testing"
+
+for fixture in fixture fixture-pest4; do
+    rsync -a --delete --exclude vendor --exclude node_modules --exclude public/build --exclude .php --exclude .env \
+        "$repo/$fixture/" "$cache/$fixture/"
+    (
+        cd "$cache/$fixture"
+        [[ -f .env ]] || { cp .env.example .env && php artisan key:generate --no-interaction; }
+        composer install --no-interaction --ignore-platform-req=ext-sockets
+        npm ci
+        PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install chromium
+        npm run build
+    )
+done
+
+echo "$cache" > "$repo/evals/.fixtures"

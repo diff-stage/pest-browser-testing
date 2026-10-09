@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if ! php -r 'exit(extension_loaded("sockets") ? 0 : 1);'; then
+    mkdir -p .php
+    printf 'extension=sockets\n' > .php/sockets.ini
+    export PHP_INI_SCAN_DIR="$(php --ini | sed -n 's/^Scan for additional .ini files in: *"\{0,1\}\([^"]*\)"\{0,1\}$/\1/p'):$PWD/.php"
+fi
+export PLAYWRIGHT_BROWSERS_PATH=0
+exec vendor/bin/pest "$@"

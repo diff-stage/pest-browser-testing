@@ -1,0 +1,8 @@
+{
+  "name": "pest-browser-testing",
+  "description": "Write reliable Pest browser tests and fix flaky ones.",
+  "author": {
+    "name": "Diff Stage"
+  },
+  "license": "MIT"
+}

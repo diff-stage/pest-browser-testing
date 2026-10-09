@@ -1,0 +1,45 @@
+2026-10-08T14:02:11.4410Z ##[group]Run npx playwright install chromium
+2026-10-08T14:02:11.4412Z npx playwright install chromium
+2026-10-08T14:02:11.4520Z shell: /usr/bin/bash -e {0}
+2026-10-08T14:02:11.4521Z ##[endgroup]
+2026-10-08T14:02:13.0172Z Downloading Chromium 147.0.7727.15 (playwright build v1217) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1217/chromium-linux.zip
+2026-10-08T14:02:16.9934Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 176.4 MiB
+2026-10-08T14:02:21.3310Z Chromium 147.0.7727.15 (playwright build v1217) downloaded to /home/runner/.cache/ms-playwright/chromium-1217
+2026-10-08T14:02:21.5508Z ##[group]Run cp .env.example .env && php artisan key:generate
+2026-10-08T14:02:21.5510Z cp .env.example .env && php artisan key:generate
+2026-10-08T14:02:21.5602Z shell: /usr/bin/bash -e {0}
+2026-10-08T14:02:21.5603Z ##[endgroup]
+2026-10-08T14:02:22.0711Z
+2026-10-08T14:02:22.0712Z    INFO  Application key set successfully.
+2026-10-08T14:02:22.0713Z
+2026-10-08T14:02:22.1198Z ##[group]Run vendor/bin/pest --parallel
+2026-10-08T14:02:22.1199Z vendor/bin/pest --parallel
+2026-10-08T14:02:22.1290Z shell: /usr/bin/bash -e {0}
+2026-10-08T14:02:22.1291Z ##[endgroup]
+2026-10-08T14:02:24.8833Z
+2026-10-08T14:02:24.8835Z   ......⨯
+2026-10-08T14:02:24.8836Z
+2026-10-08T14:02:24.8901Z   ────────────────────────────────────────────────────────────────────────────
+2026-10-08T14:02:24.8902Z    FAILED  Tests\Browser\SmokeTest > it shows the welcome page
+2026-10-08T14:02:24.8903Z   browserType.launch:
+2026-10-08T14:02:24.8904Z   ╔══════════════════════════════════════════════════════╗
+2026-10-08T14:02:24.8905Z   ║ Host system is missing dependencies to run browsers. ║
+2026-10-08T14:02:24.8906Z   ║ Please install them with the following command:      ║
+2026-10-08T14:02:24.8907Z   ║                                                      ║
+2026-10-08T14:02:24.8908Z   ║     sudo npx playwright install-deps                 ║
+2026-10-08T14:02:24.8909Z   ║                                                      ║
+2026-10-08T14:02:24.8910Z   ║ Alternatively, use apt:                              ║
+2026-10-08T14:02:24.8911Z   ║     sudo apt-get install libnss3\                    ║
+2026-10-08T14:02:24.8912Z   ║         libnspr4\                                    ║
+2026-10-08T14:02:24.8913Z   ║         libasound2t64                                ║
+2026-10-08T14:02:24.8914Z   ║                                                      ║
+2026-10-08T14:02:24.8915Z   ║ <3 Playwright Team                                   ║
+2026-10-08T14:02:24.8916Z   ╚══════════════════════════════════════════════════════╝
+2026-10-08T14:02:24.8917Z
+2026-10-08T14:02:24.8918Z   at tests/Browser/SmokeTest.php:4
+2026-10-08T14:02:24.8919Z
+2026-10-08T14:02:24.9010Z   Tests:    1 failed, 6 passed (14 assertions)
+2026-10-08T14:02:24.9011Z   Duration: 2.71s
+2026-10-08T14:02:24.9012Z   Parallel: 4 processes
+2026-10-08T14:02:24.9013Z
+2026-10-08T14:02:24.9311Z ##[error]Process completed with exit code 1.

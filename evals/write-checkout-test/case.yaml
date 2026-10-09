@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: write-checkout-test
+description: Write a new checkout browser test against an app with async totals, a CSS-like button label and an external payment API.
+context:
+  scaffold_script: scaffold.sh
